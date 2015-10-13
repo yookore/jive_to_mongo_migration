@@ -42,10 +42,20 @@ public class Subscriber  {
 	private static Connection connection;
 	private static Statement statement;
 	
-	public Subscriber(JSONArray users) {
+	public Subscriber() {
+		
+		//transform(users);
+	}
+	
+//	public Subscriber(JSONArray users) {
+//		
+//		//transform(users);
+//	}	
+	
+	public void process(JSONArray users) {
 		
 		transform(users);
-	}	
+	}
 	
 	private List<String> transform(JSONArray users) {
 		
@@ -96,6 +106,14 @@ public class Subscriber  {
 				user.put("contacts", contacts);
 				user.put("work", work);
 				
+				if (statement == null || statement.isClosed()) {
+					try {
+						statement = connection.createStatement();
+					} 
+					catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 		        ResultSet rs = statement.executeQuery(String.format("SELECT fieldid, value FROM jiveuserprofile WHERE userid = %s", user.get("jiveuserid")));
 		        while (rs.next()) {
 		        	int field = rs.getInt("fieldid");

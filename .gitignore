@@ -1,2 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea/
+.idea
+.settings
+.gitignore
+.classpath
+.project
+jiveprofilemigration.iml

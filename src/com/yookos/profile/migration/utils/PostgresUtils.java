@@ -13,10 +13,7 @@ public class PostgresUtils {
 	public static boolean isPostgresDriverLoaded() {
 		
 		try {
-			System.out.println("-------- PostgreSQL JDBC Connection Testing ------------");
 			Class.forName("org.postgresql.Driver");
-			System.out.println("PostgreSQL JDBC Driver Registered!");
-			System.out.println();
 			return true;
 		} 
 		catch (ClassNotFoundException e) {

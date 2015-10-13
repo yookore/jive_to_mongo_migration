@@ -51,7 +51,7 @@ public class LaunchSubscribers {
 		        JSONParser parser = new JSONParser();
 		        try {
 					JSONArray array = (JSONArray)parser.parse(message);
-					new Subscriber(array);
+					//new Subscriber(array);
 				} 
 		        catch (ParseException e) {
 					e.printStackTrace();

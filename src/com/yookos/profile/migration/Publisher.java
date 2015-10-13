@@ -15,6 +15,8 @@ import com.rabbitmq.client.Channel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import static com.yookos.profile.migration.utils.PostgresUtils.*;
 import static com.yookos.profile.migration.utils.RabbitMqUtils.*;
@@ -39,7 +41,9 @@ public class Publisher implements Callable<Boolean> {
 	
 	private static Connection connection;
 	private static Statement statement;
-
+	
+	Subscriber subscriber = new Subscriber();
+	
     public Publisher(BlockingQueue<Integer> queue, int batch, int proccessId) {
         
     	this.limit = batch;
@@ -100,15 +104,25 @@ public class Publisher implements Callable<Boolean> {
 	        	users.add(user);
 	        }
 	        rs.close();
-			getChannel().basicPublish(EXCHANGE_NAME, "", null, (users.toJSONString()).getBytes());
+			//getChannel().basicPublish(EXCHANGE_NAME, "", null, (users.toJSONString()).getBytes());
+	        
+	        JSONParser parser = new JSONParser();
+	        try {
+				JSONArray array = (JSONArray)parser.parse(users.toJSONString());
+				subscriber.process(array);
+			} 
+	        catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}    
 		catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+//		catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		offset = offset + limit;
+        System.out.println("DONE === From item " + offset + " to item " + (offset + limit) + ")");
 	}
     
     private String convert(Date date) {

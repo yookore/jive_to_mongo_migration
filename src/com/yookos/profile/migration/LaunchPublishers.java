@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class LaunchPublishers {
 	
-	public static final int SIZE = 2_124_155;
+	public static final int SIZE = 1_000;//2_124_155;
 	public static final int BATCH = 10;
 
 	public static void main(String[] args) {
