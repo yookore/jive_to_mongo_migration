@@ -4,5 +4,5 @@ applications:
   instances: 2
   memory: 2G
   path: target/jiveprofilemigration-0.0.1-SNAPSHOT.jar
-  #buildpack: https://github.com/cloudfoundry/java-buildpack.git#v2.4
+  #buildpack: https://github.com/cloudfoundry/java-buildpack.git
   timeout: 180
