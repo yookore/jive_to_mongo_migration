@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
 import com.rabbitmq.client.Channel;
@@ -39,13 +40,19 @@ public class Publisher implements Callable<Boolean> {
 	private static Connection connection;
 	private static Statement statement;
 
-    public Publisher(int offset, int limit) {
+    public Publisher(BlockingQueue<Integer> queue, int batch, int proccessId) {
         
-    	this.offset = offset;
-    	this.limit = limit;
+    	this.limit = batch;
+    	try {
+            this.offset = ((Integer)queue.take());
+            System.out.println("Process ID " + proccessId + " offset " + offset + " (from item " + offset + " to item " + (offset + limit) + ")");
+        } 
+    	catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
             
-    private void publish() {
+    public void publish() {
 		
 		JSONArray users = new JSONArray();
 		if (connection == null) {

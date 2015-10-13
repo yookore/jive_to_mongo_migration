@@ -7,13 +7,24 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class LaunchPublishers {
 	
-	public static final int SIZE = 1121;
+	public static final int SIZE = 2_124_155;
 	public static final int BATCH = 10;
-    static BlockingQueue<Integer> queue = new LinkedBlockingDeque<Integer>();
 
 	public static void main(String[] args) {
 
-      	ExecutorService produce = Executors.newSingleThreadExecutor();
-      	produce.submit(new Publisher(1, BATCH));
+      	// create queue
+        BlockingQueue<Integer> offset = new LinkedBlockingDeque<Integer>();
+
+        //populate queue
+        for (int i = 1; i < SIZE; i += BATCH) {
+        	offset.add(i);
+        }
+        
+        int count = 1;
+      	ExecutorService produce = Executors.newFixedThreadPool(10);
+        while (!offset.isEmpty()) {
+        	produce.submit(new Publisher(offset, BATCH, count));
+        	count++;
+        }
 	}
 }
